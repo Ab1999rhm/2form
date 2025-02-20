@@ -8,8 +8,16 @@
   ],
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/views/index.html"
+    },
+    {
+      "source": "/view-registrations",
+      "destination": "/views/view-registration.html"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/views/index.html"
     }
   ]
 }
