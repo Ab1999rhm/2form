@@ -1,6 +1,3 @@
-// Load environment variables from .env file (uncomment if using .env)
-// require('dotenv').config();
-
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -10,11 +7,11 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 
-// Serve static files from the public directory
-app.use(express.static(path.join(__dirname, '../public')));
+// Hardcoded MongoDB connection string
+const MONGODB_URI = 'mongodb+srv://abrish12:afgt123@host.xi4iz.mongodb.net/your-database-name?retryWrites=true&w=majority';
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, {
+// Connect to MongoDB
+mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
@@ -65,9 +62,9 @@ app.post('/register', upload.single('profilePicture'), async (req, res) => {
             lastName: req.body.lastName,
             password: req.body.password,
             confirmPassword: req.body.confirmPassword,
-            email: req.body.email, // Changed from 'Email' to 'email' to match frontend
-            dateOfBirth: req.body.dateOfBirth, // Changed from 'DateOfBirth' to 'dateOfBirth'
-            gender: req.body.gender, // Changed from 'Gender' to 'gender'
+            email: req.body.email,
+            dateOfBirth: req.body.dateOfBirth,
+            gender: req.body.gender,
             biography: req.body.biography,
         };
 
@@ -106,6 +103,7 @@ app.post('/register', upload.single('profilePicture'), async (req, res) => {
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(formData.password, 10);
+        console.log('Password hashed successfully.');
 
         // Prepare registration data
         const registrationData = {
@@ -119,9 +117,12 @@ app.post('/register', upload.single('profilePicture'), async (req, res) => {
             profilePicture: req.file.path,
         };
 
+        console.log('Registration data:', registrationData);
+
         // Save registration data to MongoDB
         const newRegistration = new Registration(registrationData);
         await newRegistration.save();
+        console.log('Registration saved to MongoDB.');
 
         // Send success response
         res.status(200).json({ message: 'Registration successful!' });
@@ -159,5 +160,10 @@ app.get('/view-registrations', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/view-registration.html'));
 });
 
-// Export the app for Vercel
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
 module.exports = app;
