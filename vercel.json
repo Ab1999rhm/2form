@@ -4,20 +4,32 @@
     {
       "src": "api/index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "views/*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "css/*.css",
+      "use": "@vercel/static"
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/",
-      "destination": "/views/index.html"
+      "src": "/",
+      "dest": "/views/index.html"
     },
     {
-      "source": "/view-registrations",
-      "destination": "/views/view-registration.html"
+      "src": "/view-registrations",
+      "dest": "/views/view-registration.html"
     },
     {
-      "source": "/(.*)",
-      "destination": "/views/index.html"
+      "src": "/css/(.*)",
+      "dest": "/css/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/views/index.html"
     }
   ]
 }
