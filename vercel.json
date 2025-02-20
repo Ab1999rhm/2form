@@ -6,17 +6,10 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/views/index.html"
-    },
-    {
-      "src": "/view-registrations",
-      "dest": "/views/view-registration.html"
-    }
-  ],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
