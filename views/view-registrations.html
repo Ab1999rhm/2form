@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Registrations</title>
+    <link rel="stylesheet" href="/css/form.css"> <!-- Link to your CSS file -->
+    <style>
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+            transition: background-color 0.3s ease;
+        }
+        img {
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        img:hover {
+            transform: scale(1.1);
+        }
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Container Styling */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>View Registrations</h1>
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+        <table id="registrationsTable">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Date of Birth</th>
+                    <th>Gender</th>
+                    <th>Biography</th>
+                    <th>Profile Picture</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        // Function to download the image
+        function downloadImage(imageUrl, firstName, lastName) {
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = `${firstName}_${lastName}_profile_picture.jpg`; // Set the download filename
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Fetch data from the backend
+        async function fetchRegistrations() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            loadingSpinner.style.display = 'block'; // Show loading spinner
+            try {
+                const response = await fetch('/api/registrations'); // Fetch data from the backend
+                if (!response.ok) {
+                    throw new Error('Failed to fetch registrations');
+                }
+                const registrations = await response.json(); // Parse JSON data
+
+                // Get the table body
+                const tbody = document.querySelector('#registrationsTable tbody');
+
+                // Clear existing rows
+                tbody.innerHTML = '';
+
+                // Loop through the data and create table rows
+                registrations.forEach(registration => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${registration.firstName}</td>
+                        <td>${registration.lastName}</td>
+                        <td>${registration.email}</td>
+                        <td>${new Date(registration.dateOfBirth).toLocaleDateString()}</td>
+                        <td>${registration.gender}</td>
+                        <td>${registration.biography}</td>
+                        <td>
+                            <img src="${registration.profilePicture}" alt="Profile Picture" width="50" height="50" onclick="downloadImage('${registration.profilePicture}', '${registration.firstName}', '${registration.lastName}')">
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching registrations:', error);
+                alert('Failed to fetch registrations. Please try again.');
+            } finally {
+                loadingSpinner.style.display = 'none'; // Hide loading spinner
+            }
+        }
+
+        // Fetch data when the page loads
+        document.addEventListener('DOMContentLoaded', fetchRegistrations);
+    </script>
+</body>
+</html>

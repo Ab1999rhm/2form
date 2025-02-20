@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+    <link rel="stylesheet" href="css/form.css"> <!-- Link to external CSS file -->
+</head>
+<body>
+    <div class="container">
+        <h1>Create Your Account</h1>
+        <form id="registrationForm" enctype="multipart/form-data" method="post">
+            <!-- First Name -->
+            <div class="group_form">
+                <label for="firstName">First Name:</label>
+                <input type="text" name="firstName" id="firstName" placeholder="Enter your name" minlength="5" required maxlength="20">
+                <div class="error-message" id="firstNameError">First name must be at least 5 characters long.</div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="group_form">
+                <label for="lastName">Last Name:</label>
+                <input type="text" name="lastName" id="lastName" placeholder="Enter your last name" minlength="5" required maxlength="20">
+                <div class="error-message" id="lastNameError">Last name must be at least 5 characters long.</div>
+            </div>
+
+            <!-- Password -->
+            <div class="group_form">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" placeholder="Enter your password" minlength="8" required>
+                <div class="password-strength" id="passwordStrength"></div>
+                <div class="error-message" id="passwordError">Password must be at least 8 characters long and contain at least one letter and one number.</div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="group_form">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" minlength="8" required>
+                <div class="error-message" id="confirmPasswordError">Passwords do not match.</div>
+            </div>
+
+            <!-- Email -->
+            <div class="group_form">
+                <label for="Email">Email:</label>
+                <input type="email" name="Email" id="Email" placeholder="Enter your email" required>
+                <div class="error-message" id="emailError">Please enter a valid email address.</div>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="group_form">
+                <label for="DateOfBirth">Date of Birth:</label>
+                <input type="date" name="DateOfBirth" id="DateOfBirth" required>
+                <div class="error-message" id="dobError">Please enter a valid date of birth.</div>
+            </div>
+
+            <!-- Gender -->
+            <div class="group_form">
+                <label for="Gender">Gender:</label>
+                <select name="Gender" id="Gender" required>
+                    <option value="">Select your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <div class="error-message" id="genderError">Please select your gender.</div>
+            </div>
+
+            <!-- Biography -->
+            <div class="group_form">
+                <label for="Biography">Biography:</label>
+                <textarea name="Biography" id="Biography" rows="4" placeholder="Tell us about yourself..."></textarea>
+            </div>
+
+            <!-- Profile Picture -->
+            <div class="group_form">
+                <label for="profilePicture">Profile Picture:</label>
+                <input type="file" name="profilePicture" id="profilePicture" required>
+                <div class="error-message" id="profilePictureError">Profile picture is required.</div>
+            </div>
+
+            <!-- Submit Button -->
+            <input type="submit" value="Register">
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('registrationForm');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+        // Password Strength Checker
+        passwordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
+            let strength = 'weak';
+            if (password.length >= 12 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
+                strength = 'strong';
+            } else if (password.length >= 8) {
+                strength = 'medium';
+            }
+            passwordStrength.textContent = `Password Strength: ${strength}`;
+            passwordStrength.className = `password-strength ${strength}`;
+        });
+
+        // Confirm Password Validation
+        confirmPasswordInput.addEventListener('input', () => {
+            if (confirmPasswordInput.value !== passwordInput.value) {
+                confirmPasswordError.style.display = 'block';
+            } else {
+                confirmPasswordError.style.display = 'none';
+            }
+        });
+
+        // Form Submission
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Validate form fields
+            let isValid = true;
+
+            if (passwordInput.value.length < 8 || !/[A-Za-z]/.test(passwordInput.value) || !/\d/.test(passwordInput.value)) {
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('passwordError').style.display = 'none';
+            }
+
+            if (confirmPasswordInput.value !== passwordInput.value) {
+                confirmPasswordError.style.display = 'block';
+                isValid = false;
+            } else {
+                confirmPasswordError.style.display = 'none';
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            // Submit form data
+            const formData = new FormData(form);
+            const response = await fetch('/register', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert('Registration successful!');
+                form.reset();
+            } else {
+                alert('Registration failed. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

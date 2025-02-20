@@ -1,0 +1,131 @@
+/* General Styles */
+html {
+    background-color: #f0f4f8;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 550px;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.group_form {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
+    display: block;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+input[type="file"] {
+    padding: 5px;
+}
+
+.password-strength {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+.password-strength.weak {
+    color: #dc3545;
+}
+
+.password-strength.medium {
+    color: #ffc107;
+}
+
+.password-strength.strong {
+    color: #28a745;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+input:invalid + .error-message {
+    display: block;
+}
+
+.terms-label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+} /* Added closing bracket */
+
+.terms-label input {
+    margin-right: 10px;
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+}
