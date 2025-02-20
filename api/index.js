@@ -8,7 +8,10 @@ const bcrypt = require('bcrypt');
 const app = express();
 
 // Hardcoded MongoDB connection string
-const MONGODB_URI = 'mongodb+srv://abrish12:afgt123@host.xi4iz.mongodb.net/your-database-name?retryWrites=true&w=majority';
+const MONGODB_URI = 'mongodb+srv://abrish12:afgt123@host.xi4iz.mongodb.net/registrations?retryWrites=true&w=majority&appName=host';
+
+// Debug: Log the MongoDB URI
+console.log('MongoDB URI:', MONGODB_URI);
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, {
